@@ -50,7 +50,7 @@ const ProductsByCategory = () => {
 
   // Navigate to product detail page
   const handleProductClick = (product) => {
-    navigate("/products/detail-product", { state: { product } });
+    navigate(`/products/detail-product/${product._id}`); // Navigate to detail page with product ID
   };
 
   // Format IDR currency
@@ -139,7 +139,7 @@ const ProductsByCategory = () => {
                   <Card.Title className="product-name">{item.productName}</Card.Title>
                   <Card.Text className="product-price">{formatIDR(item.price)}</Card.Text>
                   <Button variant="outline-primary" className="w-100 mt-auto">
-                    + Add
+                    Detail
                   </Button>
                 </Card.Body>
               </Card>

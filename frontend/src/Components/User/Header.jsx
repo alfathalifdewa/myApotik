@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Container,
@@ -6,12 +6,27 @@ import {
   Button,
   ButtonGroup,
   Offcanvas,
+  Dropdown,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo.png";
 import "../../assets/css/Header.css";
 
 const Header = () => {
+  const [authToken, setAuthToken] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setAuthToken(token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setAuthToken(null);
+    navigate('/logout');
+  };
+
   return (
     <>
       <Navbar expand="lg" className="mb-3 navbar-container" sticky="top">
@@ -32,7 +47,7 @@ const Header = () => {
             id={`offcanvasNavbarLabel-expand-lg`}
             aria-labelledby={`offcanvasNavbarLabel-expand-lg`}
             placement="end"
-            className="offcanvas-animation" // Tambahkan class offcanvas-animation
+            className="offcanvas-animation"
           >
             <Offcanvas.Header closeButton>
               <Offcanvas.Title
@@ -55,27 +70,39 @@ const Header = () => {
                 <Nav.Link as={Link} to="/">
                   Home
                 </Nav.Link>
-                <Nav.Link as={Link} to="/category">
-                  Kategori
+                <Nav.Link as={Link} to="/products">
+                  Produk
                 </Nav.Link>
                 <Nav.Link as={Link} to="/contact">
                   Kontak Kami
                 </Nav.Link>
                 <Nav.Link as={Link} to="/about-us">
                   Tentang Kami
-                </Nav.Link> 
+                </Nav.Link>
               </Nav>
               <hr />
-              <ButtonGroup as={Link} to="/login" className="me-3">
-                <Button variant="primary">
-                  Masuk
-                </Button>
-              </ButtonGroup>
-              <ButtonGroup as={Link} to="/register">
-                <Button variant="outline-primary">
-                  Daftar
-                </Button>
-              </ButtonGroup>
+              {authToken ? (
+                <Dropdown align="end">
+                  <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+                    Profile
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/my-profile">My Profile</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/my-order">Order List</Dropdown.Item> {/* Tambahkan link ke Order List */}
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : (
+                <>
+                  <ButtonGroup as={Link} to="/login" className="me-3">
+                    <Button variant="primary">Masuk</Button>
+                  </ButtonGroup>
+                  <ButtonGroup as={Link} to="/register">
+                    <Button variant="outline-primary">Daftar</Button>
+                  </ButtonGroup>
+                </>
+              )}
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>

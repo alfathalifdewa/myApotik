@@ -36,12 +36,12 @@ const OrderListPage = () => {
     console.log('Printing order:', orderId);
   };
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = async (status) => {
     try {
-      const token = localStorage.getItem('authToken'); // Assuming token is stored in localStorage
+      const token = localStorage.getItem('authToken');
       const response = await api.put(
         '/order/updateStatus',
-        { orderId: selectedOrder._id, status: 'Successful' },
+        { orderId: selectedOrder._id, status },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,8 +49,8 @@ const OrderListPage = () => {
         }
       );
       console.log('Order status updated:', response.data);
-      fetchOrders(); // Refresh the orders list
-      handleCloseModal(); // Close the modal
+      fetchOrders();
+      handleCloseModal();
     } catch (error) {
       console.error('Failed to update order status', error);
     }
@@ -116,12 +116,14 @@ const OrderListPage = () => {
         <Modal.Body>
           {selectedOrder && (
             <>
+              <h5>User: {selectedOrder.user.username}</h5>
               <h5>Order Date: {new Date(selectedOrder.createdAt).toLocaleDateString()}</h5>
               <h5>Total Amount: {new Intl.NumberFormat('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
                 }).format(selectedOrder.total)}</h5>
               <h5>Status: {selectedOrder.status}</h5>
+              <h5>Address: {selectedOrder.address}</h5>
               <hr />
               <h5>Order Items:</h5>
               <Table striped bordered hover>
@@ -155,9 +157,16 @@ const OrderListPage = () => {
             Close
           </Button>
           <Button
+            variant="danger"
+            onClick={() => handleUpdateStatus('Cancelled')}
+            disabled={selectedOrder?.status === 'Cancelled' || selectedOrder?.status === 'Successful'}
+          >
+            Cancel Order
+          </Button>
+          <Button
             variant="primary"
-            onClick={handleUpdateStatus}
-            disabled={selectedOrder?.status === 'Successful'}
+            onClick={() => handleUpdateStatus('Successful')}
+            disabled={selectedOrder?.status === 'Successful' || selectedOrder?.status === 'Cancelled'}
           >
             Update Payment Status to Successful
           </Button>

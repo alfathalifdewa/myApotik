@@ -25,6 +25,13 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         default: 'Pending'
     },
+    address: {
+        type: String,
+        required: true
+    },
+    whatsappLink: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now

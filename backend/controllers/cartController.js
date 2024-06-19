@@ -1,3 +1,4 @@
+// src/controllers/cartController.js
 import Cart from '../models/cartModel.js';
 import Product from '../models/productModel.js';
 
@@ -9,10 +10,14 @@ export const addToCart = async (req, res) => {
         let cart = await Cart.findOne({ user: userId });
 
         if (cart) {
-            const productIndex = cart.items.findIndex(item => item.product.toString() === productId);
+            const productExists = cart.items.some(item => item.product.toString() === productId);
 
-            if (productIndex > -1) {
-                cart.items[productIndex].quantity += quantity;
+            if (productExists) {
+                cart.items.forEach(async (item) => {
+                    if (item.product.toString() === productId) {
+                        item.quantity += quantity;
+                    }
+                });
             } else {
                 cart.items.push({ product: productId, quantity });
             }
@@ -34,18 +39,35 @@ export const addToCart = async (req, res) => {
     }
 };
 
-
 export const getCart = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const cart = await Cart.findOne({ user: userId }).populate('items.product');
+        const cart = await Cart.findOne({ user: userId }).populate({
+            path: 'items.product',
+            select: '-createdAt -updatedAt' // exclude timestamps, select all other fields
+        });
 
         if (!cart) {
             return res.status(404).json({ msg: 'Cart not found' });
         }
 
-        res.status(200).json(cart);
+        // Transformasi data untuk menyertakan URL gambar
+        const itemsWithImage = cart.items.map(item => ({
+            product: {
+                ...item.product._doc,
+                image: item.product.image ? `http://localhost:5000${item.product.image}` : null
+            },
+            quantity: item.quantity
+        }));
+
+        const cartWithImage = {
+            _id: cart._id,
+            user: cart.user,
+            items: itemsWithImage
+        };
+
+        res.status(200).json(cartWithImage);
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server error');
@@ -53,7 +75,8 @@ export const getCart = async (req, res) => {
 };
 
 export const updateCart = async (req, res) => {
-    const { productId, quantity } = req.body;
+    const { productId } = req.params;
+    const { quantity } = req.body;
     const userId = req.user.id;
 
     try {
@@ -66,10 +89,10 @@ export const updateCart = async (req, res) => {
         const productIndex = cart.items.findIndex(item => item.product.toString() === productId);
 
         if (productIndex > -1) {
-            cart.items[productIndex].quantity = quantity;
-
-            if (cart.items[productIndex].quantity <= 0) {
+            if (quantity <= 0) {
                 cart.items.splice(productIndex, 1);
+            } else {
+                cart.items[productIndex].quantity = quantity;
             }
 
             const updatedCart = await cart.save();
@@ -81,7 +104,7 @@ export const updateCart = async (req, res) => {
         console.error(error.message);
         res.status(500).send('Server error');
     }
-}
+};
 
 export const deleteCart = async (req, res) => {
     const { productId } = req.params;

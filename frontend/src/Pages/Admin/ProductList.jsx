@@ -139,7 +139,8 @@ const ProductList = () => {
   };
 
   // Handle editing of product
-  const handleEditProduct = async () => {
+  const handleEditProduct = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
     formData.append('productName', newProduct.productName);
     formData.append('id_category', newProduct.id_category);
@@ -379,6 +380,17 @@ const ProductList = () => {
                     placeholder="Enter NIE"
                     name="nie"
                     value={newProduct.nie}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formDesc">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="Enter description"
+                    name="desc"
+                    value={newProduct.desc}
                     onChange={handleInputChange}
                   />
                 </Form.Group>

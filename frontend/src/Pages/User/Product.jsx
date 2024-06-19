@@ -9,11 +9,10 @@ const Product = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
-  const fetchAllProduct = async (category) => {
+  const fetchAllProduct = async () => {
     try {
       const response = await api.get(`/products`);
       setProducts(response.data.products);
-      console.log(setProducts)
     } catch (error) {
       console.error("Error fetching products", error);
     }
@@ -24,7 +23,7 @@ const Product = () => {
   }, []);
 
   const handleProductClick = (product) => {
-    navigate("/products/detail-product", { state: { product } });
+    navigate(`/products/detail-product/${product._id}`); // Navigate to detail page with product ID
   };
 
   const formatIDR = (price) => {
@@ -68,15 +67,11 @@ const Product = () => {
                       <Card.Title className="product-name">
                         {item.productName}
                       </Card.Title>
-                      {/* <Card.Text className="product-description">
-                        {item.desc}
-                      </Card.Text> */}
                       <Card.Text className="product-price">
                         {formatIDR(item.price)}
                       </Card.Text>
-
                       <Button variant="outline-primary" className="pe-3 ps-3">
-                        + Tambah
+                        Detail
                       </Button>
                     </Card.Body>
                   </Card>

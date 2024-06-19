@@ -14,6 +14,7 @@ import diagnosis05 from "../../assets/img/diagnosis05.png";
 import diagnosis06 from "../../assets/img/diagnosis06.png";
 import "../../assets/css/Home.css";
 import api from "../../api";
+import FloatingCart from '../../Components/User/FloatingCart';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -48,26 +49,26 @@ const Home = () => {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    window.$crisp = [];
-    window.CRISP_WEBSITE_ID = "0efccc7d-d3ae-4a9c-94f7-3f59742ed30e";
-    crispScriptRef.current = document.createElement("script");
-    crispScriptRef.current.src = "https://client.crisp.chat/l.js";
-    crispScriptRef.current.async = 1;
-    document
-      .getElementsByTagName("head")[0]
-      .appendChild(crispScriptRef.current);
+  // useEffect(() => {
+  //   window.$crisp = [];
+  //   window.CRISP_WEBSITE_ID = "0efccc7d-d3ae-4a9c-94f7-3f59742ed30e";
+  //   crispScriptRef.current = document.createElement("script");
+  //   crispScriptRef.current.src = "https://client.crisp.chat/l.js";
+  //   crispScriptRef.current.async = 1;
+  //   document
+  //     .getElementsByTagName("head")[0]
+  //     .appendChild(crispScriptRef.current);
 
-    return () => {
-      if (crispScriptRef.current) {
-        document
-          .getElementsByTagName("head")[0]
-          .removeChild(crispScriptRef.current);
-        delete window.$crisp;
-        delete window.CRISP_WEBSITE_ID;
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (crispScriptRef.current) {
+  //       document
+  //         .getElementsByTagName("head")[0]
+  //         .removeChild(crispScriptRef.current);
+  //       delete window.$crisp;
+  //       delete window.CRISP_WEBSITE_ID;
+  //     }
+  //   };
+  // }, []);
 
   const diagnosis = [
     {
@@ -111,12 +112,13 @@ const Home = () => {
   };
 
   const handleProductClick = (product) => {
-    navigate("/products/detail-product", { state: { product } });
+    navigate(`/products/detail-product/${product._id}`); // Navigate to detail page with product ID
   };
 
   return (
     <>
       <Header />
+      <FloatingCart />
       {/* CAROUSEL */}
       <div className="carousel-container">
         <Carousel>
@@ -284,6 +286,9 @@ const Home = () => {
                       <Card.Text className="product-price">
                         {formatRupiah(product.price)}
                       </Card.Text>
+                      <Button variant="outline-primary" className="pe-3 ps-3">
+                        Detail
+                      </Button>
                     </Card.Body>
                   </Card>
                 </Col>

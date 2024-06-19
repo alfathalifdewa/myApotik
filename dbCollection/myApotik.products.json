@@ -285,4 +285,28 @@
     "$date": "2024-06-18T03:31:15.924Z"
   },
   "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6672cc8a740356a47b86d662"
+  },
+  "productName": "IMBOOST",
+  "id_category": "SPL",
+  "image": "/uploads/1718799497935-imbost.jpg",
+  "desc": "APA AJA KEK",
+  "indication": "-",
+  "composition": "Vitamin C",
+  "dose": "1x sehari",
+  "howtouse": "DIMINUM",
+  "effect": "ISD",
+  "group": "",
+  "nie": "SPL20240619",
+  "price": 40000,
+  "createdAt": {
+    "$date": "2024-06-19T12:18:18.197Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-19T12:18:18.197Z"
+  },
+  "__v": 0
 }]

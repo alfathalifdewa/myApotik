@@ -19,6 +19,10 @@ import Product from './Pages/User/Product';
 import ProductsByCategory from "./Pages/User/ProductsByCategory";
 import NotFoundPage from './Pages/User/NotFoundPage';
 import Checkout from './Pages/User/Checkout';
+import MyOrder from './Pages/User/MyOrder';
+import OrderSuccess from './Pages/User/OrderSuccess'; // Import OrderSuccess component
+import FloatingCart from './Components/User/FloatingCart';
+import { CartProvider } from './contexts/CartContext';
 
 // DASHBOARD
 import DashboardPage from './Pages/Admin/DashboardPage';
@@ -30,32 +34,37 @@ import CategoryListPage from './Pages/Admin/Category';
 
 const App = () => {
   return (
-    <Router>
-      <div className="app-container">
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/products" element={<Product />} />
-          <Route path="/products/:id_category" element={<ProductsByCategory />} />
-          <Route path="/products/detail-product" element={<DetailProduct />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="/checkout" element={<Checkout />} />
+    <CartProvider>
+      <Router>
+        <div className="app-container">
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/products" element={<Product />} />
+            <Route path="/products/:id_category" element={<ProductsByCategory />} />
+            <Route path="/products/detail-product/:id" element={<DetailProduct />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/my-order" element={<MyOrder />} />
+            <Route path="/order-success" element={<OrderSuccess />} /> {/* Add OrderSuccess route */}
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
 
-          {/* DASHBOARD */}
-          <Route path="/dashboard" element={<AdminRoute element={<DashboardPage />} />} />
-          <Route path="/dashboard/my-profile" element={<AdminRoute element={<MyProfilePage />} />} />
-          <Route path="/dashboard/product-list" element={<AdminRoute element={<ProductList />} />} />
-          <Route path="/dashboard/user-list" element={<AdminRoute element={<UserListPage />} />} />
-          <Route path="/dashboard/category-list" element={<AdminRoute element={<CategoryListPage />} />} />
-          <Route path="/dashboard/order-list" element={<AdminRoute element={<OrderListPage />} />} />
-        </Routes>
-      </div>
-    </Router>
+            {/* DASHBOARD */}
+            <Route path="/dashboard" element={<AdminRoute element={<DashboardPage />} />} />
+            <Route path="/dashboard/my-profile" element={<AdminRoute element={<MyProfilePage />} />} />
+            <Route path="/dashboard/product-list" element={<AdminRoute element={<ProductList />} />} />
+            <Route path="/dashboard/user-list" element={<AdminRoute element={<UserListPage />} />} />
+            <Route path="/dashboard/category-list" element={<AdminRoute element={<CategoryListPage />} />} />
+            <Route path="/dashboard/order-list" element={<AdminRoute element={<OrderListPage />} />} />
+          </Routes>
+          <FloatingCart />
+        </div>
+      </Router>
+    </CartProvider>
   );
 };
 
